@@ -32,10 +32,9 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPO }}
           IMAGE_TAG: latest
         run: |
-          # Dhyan dein ki tag ke baad ek space hai aur phir dot (.) hai
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest .
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest
+          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest" >> $GITHUB_OUTPUT
   Continuous-Deployment:
     needs: Continuous-Integration
     runs-on: self-hosted
