@@ -24,19 +24,17 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         run: |
-          # Registry URL directly likh rahe hain (Testing ke liye)
-          # Format: <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+          # 1. ECR Login (Yeh step credentials set karega)
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 463032375681.dkr.ecr.us-east-1.amazonaws.com
+
+          # 2. Build and Push
           REGISTRY=463032375681.dkr.ecr.us-east-1.amazonaws.com
           REPOSITORY=visarepo
           IMAGE_TAG=latest
-          
-          # Docker build
+
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          
-          # Docker push
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           
-          # Output capture
           echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
   Continuous-Deployment:
     needs: Continuous-Integration
