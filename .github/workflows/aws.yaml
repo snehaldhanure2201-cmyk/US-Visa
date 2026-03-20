@@ -23,15 +23,13 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPO }}
-          IMAGE_TAG: latest
         run: |
-          # Variables ko double quotes mein rakhein aur dot (.) se pehle ek space check karein
-          docker build -t "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest" .
-          docker push "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest"
-          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest" >> $GITHUB_OUTPUT
+          REGISTRY=${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY=${{ secrets.ECR_REPO }}
+          IMAGE_TAG=latest
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
   Continuous-Deployment:
     needs: Continuous-Integration
     runs-on: self-hosted
