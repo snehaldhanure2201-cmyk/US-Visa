@@ -1,13 +1,13 @@
-# Hum Python 3.10-slim use karenge kyunki aap 3.10 par kaam kar rahi hain
-FROM python:3.10-slim-buster
+# Hum Python 3.10-slim-bullseye use karenge, buster purana ho gaya hai
+FROM python:3.10-slim-bullseye
 
-# System updates aur agar koi basic tool chahiye ho
-RUN apt-get update -y && apt-get install -y awscli
+# Update aur AWS CLI install karne ka naya stable tarika
+RUN apt-get update -y && apt-get install -y awscli && apt-get clean
 
 # Project folder set karein
 WORKDIR /app
 
-# Saari files ko container ke andar copy karein
+# Saari files copy karein
 COPY . /app
 
 # Requirements install karein
