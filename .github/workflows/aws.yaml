@@ -24,17 +24,16 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         run: |
-          # Registry ko variable mein lete hain
-          REGISTRY=${{ steps.login-ecr.outputs.registry }}
-          
-          # Repository ka naam directly likh rahe hain (Testing ke liye)
+          # Registry URL directly likh rahe hain (Testing ke liye)
+          # Format: <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+          REGISTRY=463032375681.dkr.ecr.us-east-1.amazonaws.com
           REPOSITORY=visarepo
           IMAGE_TAG=latest
           
-          # Docker build command (dhyan rahe aakhir mein space aur dot hai)
+          # Docker build
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           
-          # Docker push command
+          # Docker push
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           
           # Output capture
