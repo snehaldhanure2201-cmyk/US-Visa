@@ -23,11 +23,15 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
+        env:
+          # Hum yahan confirm kar rahe hain ki variables load ho rahe hain
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPO_NAME: ${{ secrets.ECR_REPO }}
         run: |
-          # Direct secrets aur outputs ka use bina kisi extra variable ke
-          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest .
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest
-          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest" >> $GITHUB_OUTPUT
+          # Ab hum in defined variables ka use karenge
+          docker build -t $REGISTRY/$REPO_NAME:latest .
+          docker push $REGISTRY/$REPO_NAME:latest
+          echo "image=$REGISTRY/$REPO_NAME:latest" >> $GITHUB_OUTPUT
   Continuous-Deployment:
     needs: Continuous-Integration
     runs-on: self-hosted
